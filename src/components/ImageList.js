@@ -3,9 +3,10 @@ import Image from './Image'
 
 const ImageList = props => {
   let mappedImages = props.imageList.map(image => {
-    return <Image key={image.id} image={image} openCards={props.openCards} handleClick={props.handleClick}/>
-      })
-      console.log("this is", mappedImages);
+    return <Image key={image.id} image={image} handleClick={props.handleClick}/>
+  })
+
+
   return (
       <div className="deck">
         {mappedImages}
