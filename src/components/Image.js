@@ -1,11 +1,21 @@
-import React from 'react'
+import React, {Component} from 'react'
 
-const Image = props => {
-  return (
-    <div className="card">
-      <img src={props.image.url} style={{width: 150, height: 150}}/>
-    </div>
-      )
+class Image extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {}
+  }
+  render() {
+    return (
+      <div onClick={this.props.handleClick}>
+        {/* { props.openCards.includes(props.image.name) ?} */}
+        <div className="card"  />
+        {/* {:} */}
+        {/* <img className="card" src={props.image.url}/> */}
+      </div>
+        )
+}
 }
 
 export default Image

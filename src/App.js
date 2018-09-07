@@ -7,8 +7,14 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      imageList: []
+      imageList: [],
+      openCards: []
     }
+  }
+
+  handleClick = (event) => {
+    this.setState({openCards: [...this.state.openCards]})
+
   }
 
   componentDidMount() {
@@ -21,7 +27,7 @@ class App extends Component {
     // console.log(this.state.imageList);
     return (
       <div className="App">
-        <ImageList imageList={this.state.imageList}/>
+        <ImageList imageList={this.state.imageList} openCards={this.state.openCards} handleClick={this.handleClick}/>
       </div>
     )
   }
