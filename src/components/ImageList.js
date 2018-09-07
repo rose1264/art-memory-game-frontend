@@ -7,8 +7,9 @@ const ImageList = props => {
       })
       console.log("this is", mappedImages);
   return (
-      <div>
+      <div className="deck">
         {mappedImages}
+        {mappedImages} 
       </div>
         )
   }
