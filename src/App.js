@@ -31,35 +31,7 @@ class App extends Component {
     })
   }
 
-  // openImage = (image, callback) => {
-  //   this.setState({openImages: [...this.state.openImages, image]}, () => {
-  //     if(this.state.openImages.length === 2) {
-  //       if(this.state.openImages[0].name !== this.state.openImages[1].name) {
-  //         //change image's state
-  //         let imageMatch = "No Match"
-  //         let firstImageURL = this.state.openImages[0].url
-  //         callback(imageMatch, firstImageURL)
-  //       }
-  //       this.setState({openImages: []})
-  //     }
-  //   })
-  //
-  // }
-
   handleClick = e => {
-    // this.state.imageList.map((image)=>{
-    //   if (image.name === e.target.getAttribute('name')){
-    //     this.setState({
-    //       imageList: [
-    //         ...this.state.imageList,
-    //         {
-    //           ...image,
-    //           open: true
-    //         }
-    //       ]
-    //     })
-    //   }
-    // })
     let newImageList = this.state.imageList.map(image => {
       if (image.name === e.target.getAttribute('name')) {
         return {
