@@ -6,7 +6,6 @@ class Image extends Component {
   }
 
   render() {
-    // console.log('image props', this.props)
     return (
       <div onClick={this.props.handleClick}>
           {this.props.image.open ?

@@ -1,8 +1,9 @@
 import React from 'react'
 import Image from './Image'
 
-const ImageList = props => {
 
+
+const ImageList = props => {
 
   let mappedImages = props.imageList.map((image, idx) => {
     return <Image key={idx} image={image} handleClick={props.handleClick}/>
