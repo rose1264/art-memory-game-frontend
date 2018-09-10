@@ -20,7 +20,7 @@ h1 {
 .deck {
   width: 660px;
   min-height: 680px;
-  background: linear-gradient(160deg, #02ccba 0%, #aa7ecd 100%);
+  background: linear-gradient(160deg, #aff3f7 0%, #47d8e0  100%);
   padding: 32px;
   border-radius: 10px;
   box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
@@ -34,7 +34,7 @@ h1 {
 .deck .card {
   height: 135px;
   width: 135px;
-  background: #2e3d49;
+  background: url('./images/van-grass.png');
   font-size: 0;
   color: #ffffff;
   border-radius: 8px;
