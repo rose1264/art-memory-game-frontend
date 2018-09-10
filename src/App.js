@@ -32,6 +32,22 @@ class App extends Component {
     })
   }
 
+  restart = () => {
+    alert('Congratulations! Your memory is a MASTERPIECE!')
+    let images = this.state.imageList
+    let turnedImages = images.map(image => {
+      let newImage = {
+        id: image.id,
+        name: image.name,
+        url: image.url,
+        open: false
+      }
+      return newImage
+    })
+    let shuffledImages = this.shuffle(turnedImages)
+    this.setState({imageList: shuffledImages, openArray:[]})
+  }
+
   shuffle = a => {
       for (let i = a.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -54,15 +70,20 @@ class App extends Component {
         }
       })
       setTimeout(()=>{
+        if (openArray[0].name.slice(0,5)!== openArray[1].name.slice(0,5)){
+          openArray.shift()
+          openArray.shift()
+        }
         this.setState({
-        imageList: newImageList
-      })}, 1000)
+        imageList: newImageList,
+        openArray: openArray
+      })}, 1500)
 
     }
   }
 
   // callback function of handleClick, first check the number
-  checkPair = (newImageList) => {
+  checkPair = newImageList => {
     let imageOpenCount = 0
     newImageList.forEach(image => {
       if (image.open) {
@@ -72,7 +93,11 @@ class App extends Component {
 
     if (imageOpenCount%2 === 0) {
       let openArray = this.state.openArray
-      this.comparePair(openArray)
+      if (openArray.length === 16) {
+        setTimeout(this.restart, 1500)
+      } else {
+        this.comparePair(openArray)
+      }
     }
 
   }
@@ -102,7 +127,6 @@ class App extends Component {
   }
 
   render() {
-    // console.log(this.state.openArray);
     return (
       <div className="App">
         <ImageList imageList={this.state.imageList} handleClick={this.handleClick}/>
