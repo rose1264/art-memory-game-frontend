@@ -25,14 +25,22 @@ class App extends Component {
         }
         return newImage
       })
+      let shuffledImages = this.shuffle(images)
       this.setState({
-        imageList: images
+        imageList: shuffledImages
       })
     })
   }
 
-  comparePair = (openArray) => {
-    console.log(openArray)
+  shuffle = a => {
+      for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+  }
+
+  comparePair = openArray => {
     if (openArray[0].name.slice(0,5) !== openArray[1].name.slice(0,5)){
       let newImageList = this.state.imageList.map(image => {
         if (image.name.slice(0,5) === openArray[0].name.slice(0,5)
