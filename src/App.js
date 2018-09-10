@@ -7,8 +7,8 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      imageList: []
-      // openImages: []
+      imageList: [],
+      openArray: []
     }
   }
 
@@ -31,20 +31,12 @@ class App extends Component {
     })
   }
 
-  checkPair = (newImageList) => {
-    let imageOpenCount = 0
-    let openArray = []
-    newImageList.forEach(image => {
-      if (image.open === true) {
-        imageOpenCount++
-        openArray.unshift(image)
-      }
-    })
-    debugger
-    if ((imageOpenCount%2 === 0) && (openArray[0].name.slice(0,10) !== openArray[1].name.slice(0,10))) {
+  comparePair = (openArray) => {
+    console.log(openArray)
+    if (openArray[0].name.slice(0,5) !== openArray[1].name.slice(0,5)){
       let newImageList = this.state.imageList.map(image => {
-        if (image.name.slice(0,10) === openArray[0].name.slice(0,10)
-        ||image.name.slice(0,10) === openArray[1].name.slice(0,10)) {
+        if (image.name.slice(0,5) === openArray[0].name.slice(0,5)
+        ||image.name.slice(0,5) === openArray[1].name.slice(0,5)) {
           return {
             ...image,
             open: false
@@ -57,13 +49,34 @@ class App extends Component {
         this.setState({
         imageList: newImageList
       })}, 1000)
+
+    }
+  }
+
+  // callback function of handleClick, first check the number
+  checkPair = (newImageList) => {
+    let imageOpenCount = 0
+    newImageList.forEach(image => {
+      if (image.open) {
+        imageOpenCount++
+      }
+    })
+
+    if (imageOpenCount%2 === 0) {
+      let openArray = this.state.openArray
+      this.comparePair(openArray)
     }
 
   }
 
   handleClick = e => {
+    //add to openArray
+    let addedImage={}
+
+    //toggle image open attribute
     let newImageList = this.state.imageList.map(image => {
       if (image.name === e.target.getAttribute('name')) {
+        addedImage = image
         return {
           ...image,
           open: true
@@ -74,13 +87,14 @@ class App extends Component {
     })
 
     this.setState({
-      imageList: newImageList
+      imageList: newImageList,
+      openArray: [addedImage, ...this.state.openArray]
     }, ()=>{this.checkPair(this.state.imageList)})
 
   }
 
   render() {
-    // console.log(this.state.imageList[0]);
+    // console.log(this.state.openArray);
     return (
       <div className="App">
         <ImageList imageList={this.state.imageList} handleClick={this.handleClick}/>
