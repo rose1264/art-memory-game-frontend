@@ -40,7 +40,7 @@ class App extends Component {
         openArray.unshift(image)
       }
     })
-    // debugger
+    debugger
     if ((imageOpenCount%2 === 0) && (openArray[0].name.slice(0,10) !== openArray[1].name.slice(0,10))) {
       let newImageList = this.state.imageList.map(image => {
         if (image.name.slice(0,10) === openArray[0].name.slice(0,10)
@@ -80,7 +80,7 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state.imageList[0]);
+    // console.log(this.state.imageList[0]);
     return (
       <div className="App">
         <ImageList imageList={this.state.imageList} handleClick={this.handleClick}/>
