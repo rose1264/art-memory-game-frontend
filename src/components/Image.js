@@ -1,21 +1,15 @@
-import React, {Component} from 'react'
+import React from 'react'
 
-class Image extends Component {
-  constructor(props) {
-    super(props)
-  }
-
-  render() {
+const Image = props => {
     return (
-      <div onClick={this.props.handleClick}>
-          {this.props.image.open ?
-            <img className="card" name={this.props.image.name} src={this.props.image.url} />
+      <div onClick={props.handleClick}>
+          {props.image.open ?
+            <img className="card" alt ={props.image.name} name={props.image.name} src={props.image.url} />
             :
-            <div className="card" name={this.props.image.name}></div>
+            <div className="card" name={props.image.name}></div>
           }
       </div>
     )
-}
 }
 
 export default Image
