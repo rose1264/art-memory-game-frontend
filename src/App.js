@@ -4,7 +4,7 @@ import ImageList from './components/ImageList'
 import UserPanel from './components/UserPanel'
 import Score from './components/Score'
 import Leaderboard from './components/Leaderboard'
-
+import BackToTopButton from './components/BackToTopButton'
 
 const URL = "http://localhost:3000/api/v1/images"
 const PlayersURL = "http://localhost:3000/api/v1/players"
@@ -60,7 +60,7 @@ class App extends Component {
   }
 
   restart = () => {
-    alert('Congratulations! Your memory is a MASTERPIECE!')
+
     let images = this.state.imageList
     let turnedImages = images.map(image => {
       let newImage = {
@@ -127,8 +127,22 @@ class App extends Component {
 
     if (imageOpenCount%2 === 0) {
       let openArray = this.state.openArray
-      if (openArray.length === 2) {
-        window.scrollBy(0, 800)
+      if (openArray.length === 16) {
+        fetch(ScoresURL, {
+          method: "POST",
+          headers: {
+            "Content-Type": 'application/json'
+          },
+          body: JSON.stringify({
+            points: this.state.score,
+            player_id: this.state.player_id,
+
+          })
+        })
+        setTimeout(()=>{
+          alert('Congratulations! Your memory is a MASTERPIECE!')
+          window.scrollBy(0, 800)
+        }, 1000)
         this.setState({
           ...this.state,
           gameEnd: true
@@ -151,6 +165,16 @@ class App extends Component {
       }
     }
   }
+
+
+
+  // When the user clicks on the button, scroll to the top of the document
+  topFunction = () => {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    this.restart()
+  }
+
 
   bestScore = array => {
     let sortedArray = array.sort(function(a, b){return a.points - b.points})
@@ -240,6 +264,8 @@ class App extends Component {
           handleClick={this.handleClick}/>
         <Leaderboard
           leaderBoard={this.state.leaderBoard}/>
+        <BackToTopButton
+          topFunction={this.topFunction}/>
       </div>
     )
   }
