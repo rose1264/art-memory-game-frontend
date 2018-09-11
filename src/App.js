@@ -1,28 +1,50 @@
 import React, { Component } from 'react';
 import './App.css';
 import ImageList from './components/ImageList'
+import UserPanel from './components/UserPanel'
+import Score from './components/Score'
+import Leaderboard from './components/Leaderboard'
+
+
 const URL = "http://localhost:3000/api/v1/images"
+const PlayersURL = "http://localhost:3000/api/v1/players"
+const ScoresURL = "http://localhost:3000/api/v1/scores"
 
 class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
       imageList: [],
-      openArray: []
+      openArray: [],
+      leaderBoard: [],
+      player: '',
+      player_id: 0,
+      score: 0,
+      bestScore: 0,
+      playerLogin: false,
+      gameEnd: false
     }
   }
 
   componentDidMount() {
+    fetch(ScoresURL)
+      .then(resp => resp.json())
+      .then(data => this.sortedArray(data))
+      .then(data => this.setState({
+        ...this.state,
+        leaderBoard: data
+      }))
+
     fetch(URL)
-    .then(resp => resp.json())
-    .then(json => {
-      let images=json.map(image => {
-        let newImage = {
-          id: image.id,
-          name: image.name,
-          url: image.url,
-          open: false
-        }
+      .then(resp => resp.json())
+      .then(json => {
+        let images=json.map(image => {
+          let newImage = {
+            id: image.id,
+            name: image.name,
+            url: image.url,
+            open: false
+          }
         return newImage
       })
       let shuffledImages = this.shuffle(images)
@@ -30,6 +52,11 @@ class App extends Component {
         imageList: shuffledImages
       })
     })
+    this.interval = setInterval(this.clockTick, 1000)
+  }
+
+  componentWillUnmount(){
+    clearInterval(this.interval)
   }
 
   restart = () => {
@@ -45,8 +72,15 @@ class App extends Component {
       return newImage
     })
     let shuffledImages = this.shuffle(turnedImages)
-    this.setState({imageList: shuffledImages, openArray:[]})
+    this.setState({...this.state, imageList: shuffledImages, openArray:[], score: 0, gameEnd: false})
   }
+
+  clockTick = () => {
+    this.setState(prevState => ({
+        score: prevState.score+1
+      }))
+  }
+
 
   shuffle = a => {
       for (let i = a.length - 1; i > 0; i--) {
@@ -93,13 +127,75 @@ class App extends Component {
 
     if (imageOpenCount%2 === 0) {
       let openArray = this.state.openArray
-      if (openArray.length === 16) {
-        setTimeout(this.restart, 1500)
+      if (openArray.length === 2) {
+        window.scrollBy(0, 800)
+        this.setState({
+          ...this.state,
+          gameEnd: true
+        })
+        fetch(ScoresURL, {
+            method: "POST",
+            headers: {
+              "Content-Type": 'application/json'
+            },
+            body: JSON.stringify({
+              points: this.state.score,
+              player_id: this.state.player_id,
+
+            })
+          })
+
+        // setTimeout(this.restart, 1500)
       } else {
         this.comparePair(openArray)
       }
     }
+  }
 
+  bestScore = array => {
+    let sortedArray = array.sort(function(a, b){return a.points - b.points})
+    return sortedArray[0]
+  }
+
+
+  sortedArray = array => {
+    let sortedArray = array.sort(function(a, b){return a.points - b.points})
+    return sortedArray
+  }
+
+  handleChange = e => {
+    this.setState({
+      ...this.state,
+      player: e.target.value
+    })
+  }
+
+  handleSubmit = e => {
+    e.preventDefault()
+    let config = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8"
+      },
+      body: JSON.stringify({"name": this.state.player}
+      )
+    }
+
+    fetch(PlayersURL, config)
+      .then(r=>r.json())
+      .then(data=>this.setState({
+        ...this.state,
+        playerLogin: true,
+        player_id: data.id
+      }))
+
+    fetch(ScoresURL)
+      .then(r=>r.json())
+      .then(data=>this.bestScore(data))
+      .then(scoreObj=>this.setState({
+        ...this.state,
+        bestScore:scoreObj.points
+      }))
   }
 
   handleClick = e => {
@@ -129,7 +225,21 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <ImageList imageList={this.state.imageList} handleClick={this.handleClick}/>
+        <UserPanel
+          bestScore={this.state.bestScore}
+          player={this.state.player}
+          playerLogin={this.state.playerLogin}
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}/>
+        <Score
+          score={this.state.score}
+          setScore={this.setScore}
+          gameEnd={this.state.gameEnd}/>
+        <ImageList
+          imageList={this.state.imageList}
+          handleClick={this.handleClick}/>
+        <Leaderboard
+          leaderBoard={this.state.leaderBoard}/>
       </div>
     )
   }
